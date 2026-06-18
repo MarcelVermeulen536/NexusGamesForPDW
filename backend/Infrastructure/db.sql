@@ -10,8 +10,11 @@
 -- ============================================
 
 DROP DATABASE IF EXISTS plateforme_jeux;
-CREATE DATABASE IF NOT EXISTS plateforme_jeux;
+CREATE DATABASE IF NOT EXISTS plateforme_jeux CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
 USE plateforme_jeux;
+
+-- Force l'encodage UTF-8 pour bien gérer les accents français (é, ô, è...)
+SET NAMES utf8mb4;
 
 -- ============================================
 -- TABLE 1 : GENRES
