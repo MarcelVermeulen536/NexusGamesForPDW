@@ -1,0 +1,25 @@
+<header class="entete">
+  <a class="logo" routerLink="/">Nexus<span>Games</span></a>
+
+  <nav class="liens">
+    <a routerLink="/" routerLinkActive="actif" [routerLinkActiveOptions]="{ exact: true }">Catalogue</a>
+
+    <!-- Le nombre d'articles vient du signal cartState.count() -->
+    <a routerLink="/cart" routerLinkActive="actif">
+      Panier
+      @if (cartState.count() > 0) {
+        <span class="badge">{{ cartState.count() }}</span>
+      }
+    </a>
+
+    <!-- Liens conditionnés à l'état de connexion (cours Angular : @if + service d'état) -->
+    @if (authState.isLoggedIn()) {
+      <a routerLink="/library" routerLinkActive="actif">Bibliothèque</a>
+      <span class="pseudo">{{ authState.currentUser()?.pseudo }}</span>
+      <button class="lien-bouton" (click)="deconnexion()">Déconnexion</button>
+    } @else {
+      <a routerLink="/login" routerLinkActive="actif">Connexion</a>
+      <a routerLink="/register" routerLinkActive="actif">Inscription</a>
+    }
+  </nav>
+</header>

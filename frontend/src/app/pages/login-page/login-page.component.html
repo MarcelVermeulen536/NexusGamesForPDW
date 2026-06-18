@@ -1,0 +1,27 @@
+<section class="auth">
+  <h1>Connexion</h1>
+
+  <!-- Liaison du formulaire réactif (cours Angular : [formGroup] + (ngSubmit)) -->
+  <form [formGroup]="loginForm" (ngSubmit)="onSubmit()">
+    <label for="email">Email</label>
+    <input id="email" type="email" formControlName="email" placeholder="vous@email.com" />
+    @if (loginForm.get('email')?.invalid && loginForm.get('email')?.touched) {
+      <p class="champ-erreur">Un email valide est requis.</p>
+    }
+
+    <label for="motDePasse">Mot de passe</label>
+    <input id="motDePasse" type="password" formControlName="motDePasse" />
+    @if (loginForm.get('motDePasse')?.invalid && loginForm.get('motDePasse')?.touched) {
+      <p class="champ-erreur">Le mot de passe est requis.</p>
+    }
+
+    @if (erreur()) {
+      <p class="champ-erreur">{{ erreur() }}</p>
+    }
+
+    <!-- Bouton désactivé tant que le formulaire est invalide (cours : property binding) -->
+    <button type="submit" [disabled]="loginForm.invalid">Se connecter</button>
+  </form>
+
+  <p class="lien">Pas encore de compte ? <a routerLink="/register">Inscrivez-vous</a></p>
+</section>

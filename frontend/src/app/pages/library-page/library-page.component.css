@@ -1,0 +1,53 @@
+.biblio h1 {
+  margin-bottom: 1.5rem;
+}
+
+.grille {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+  gap: 1.25rem;
+}
+
+.carte {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  padding: 1.1rem;
+}
+
+.carte h2 {
+  font-size: 1.1rem;
+  margin: 0 0 0.4rem;
+}
+
+.meta {
+  color: var(--text-muted);
+  font-size: 0.85rem;
+  margin: 0 0 0.75rem;
+}
+
+.barre {
+  background: var(--border);
+  border-radius: 999px;
+  height: 8px;
+  overflow: hidden;
+}
+
+.remplissage {
+  background: var(--accent);
+  height: 100%;
+}
+
+.completion {
+  font-size: 0.8rem;
+  color: var(--text-muted);
+  margin: 0.4rem 0 0;
+}
+
+.info {
+  color: var(--text-muted);
+}
+
+.erreur {
+  color: #ff6b6b;
+}

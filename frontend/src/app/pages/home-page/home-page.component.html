@@ -1,0 +1,50 @@
+<section class="catalogue">
+  <h1>Catalogue</h1>
+
+  <!-- États de chargement / erreur gérés avec @if (cours Angular : nouvelle syntaxe) -->
+  @if (isLoading()) {
+    <p class="info">Chargement des jeux...</p>
+  } @else if (hasError()) {
+    <p class="erreur">Impossible de charger le catalogue. L'API est-elle démarrée ?</p>
+  } @else {
+    <div class="grille">
+      <!-- @for avec track obligatoire (cours Angular 17+) ; @empty si la liste est vide -->
+      @for (game of games(); track game.id) {
+        <article class="carte">
+          <div class="carte-haut">
+            <h2>{{ game.titre }}</h2>
+            <span class="score" [class.bon-score]="(game.scoreMetascore ?? 0) >= 90">
+              {{ game.scoreMetascore }}
+            </span>
+          </div>
+
+          <p class="meta">{{ game.developpeur }} · {{ game.plateforme }}</p>
+
+          <div class="genres">
+            @for (genre of game.genres; track genre) {
+              <span class="genre">{{ genre }}</span>
+            }
+          </div>
+
+          <p class="description">{{ game.description }}</p>
+
+          <div class="carte-bas">
+            <!-- Affichage du prix : barré + prix réduit si une promotion est active -->
+            @if (game.prixReduit) {
+              <span class="prix-barre">{{ game.prix }} €</span>
+              <span class="prix promo">{{ game.prixReduit }} €</span>
+            } @else {
+              <span class="prix">{{ game.prix }} €</span>
+            }
+
+            <button (click)="ajouterAuPanier(game)" [disabled]="estDansPanier(game.id)">
+              {{ estDansPanier(game.id) ? 'Dans le panier' : 'Ajouter au panier' }}
+            </button>
+          </div>
+        </article>
+      } @empty {
+        <p class="info">Aucun jeu disponible.</p>
+      }
+    </div>
+  }
+</section>

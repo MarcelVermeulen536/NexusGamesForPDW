@@ -1,1 +1,53 @@
-/* You can add global styles to this file, and also import other style files */
+/* Styles globaux de NexusGames (thème sombre type Steam/GOG). */
+
+/* Variables CSS globales (cours CSS : variables avec :root + var()) */
+:root {
+  --bg: #1b2838;
+  --surface: #243447;
+  --border: #3a4a5e;
+  --text: #e6edf3;
+  --text-muted: #9fb0c0;
+  --accent: #66c0f4;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  font-family: 'Segoe UI', Roboto, Arial, sans-serif;
+  background: var(--bg);
+  color: var(--text);
+}
+
+a {
+  color: var(--accent);
+}
+
+/* Style de base commun à tous les boutons */
+button {
+  cursor: pointer;
+  border: none;
+  border-radius: 6px;
+  padding: 0.55rem 0.9rem;
+  font-size: 0.9rem;
+  font-weight: 600;
+  background: var(--accent);
+  color: #042;
+  transition: opacity 0.12s ease;
+}
+
+button:hover:not(:disabled) {
+  opacity: 0.85;
+}
+
+button:disabled {
+  opacity: 0.45;
+  cursor: not-allowed;
+}
+
+h1,
+h2 {
+  color: var(--text);
+}

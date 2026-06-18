@@ -1,0 +1,37 @@
+<section class="auth">
+  <h1>Inscription</h1>
+
+  <form [formGroup]="registerForm" (ngSubmit)="onSubmit()">
+    <label for="pseudo">Pseudo</label>
+    <input id="pseudo" type="text" formControlName="pseudo" />
+    @if (registerForm.get('pseudo')?.invalid && registerForm.get('pseudo')?.touched) {
+      <p class="champ-erreur">Le pseudo est requis (au moins 3 caractères).</p>
+    }
+
+    <label for="email">Email</label>
+    <input id="email" type="email" formControlName="email" placeholder="vous@email.com" />
+    @if (registerForm.get('email')?.invalid && registerForm.get('email')?.touched) {
+      <p class="champ-erreur">Un email valide est requis.</p>
+    }
+
+    <label for="motDePasse">Mot de passe</label>
+    <input id="motDePasse" type="password" formControlName="motDePasse" />
+    @if (registerForm.get('motDePasse')?.invalid && registerForm.get('motDePasse')?.touched) {
+      <p class="champ-erreur">Le mot de passe est requis (au moins 6 caractères).</p>
+    }
+
+    <label for="prenom">Prénom (optionnel)</label>
+    <input id="prenom" type="text" formControlName="prenom" />
+
+    <label for="nom">Nom (optionnel)</label>
+    <input id="nom" type="text" formControlName="nom" />
+
+    @if (erreur()) {
+      <p class="champ-erreur">{{ erreur() }}</p>
+    }
+
+    <button type="submit" [disabled]="registerForm.invalid">Créer mon compte</button>
+  </form>
+
+  <p class="lien">Déjà un compte ? <a routerLink="/login">Connectez-vous</a></p>
+</section>

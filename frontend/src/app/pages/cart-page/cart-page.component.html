@@ -1,0 +1,37 @@
+<section class="panier">
+  <h1>Mon panier</h1>
+
+  <!-- @if : message si le panier est vide, sinon la liste + le récapitulatif -->
+  @if (cartState.count() === 0) {
+    <p class="info">Votre panier est vide. <a routerLink="/">Voir le catalogue</a></p>
+  } @else {
+    <ul class="lignes">
+      @for (item of cartState.items(); track item.gameId) {
+        <li class="ligne">
+          <span class="titre">{{ item.titre }}</span>
+          <span class="prix">{{ item.prix }} €</span>
+          <button class="retirer" (click)="retirer(item.gameId)">Retirer</button>
+        </li>
+      }
+    </ul>
+
+    <div class="recap">
+      <!-- total() est un signal calculé : il se met à jour tout seul (cours : computed) -->
+      <p class="total">Total : <strong>{{ cartState.total() }} €</strong></p>
+
+      <label for="paiement">Méthode de paiement</label>
+      <select id="paiement" [(ngModel)]="methodePaiement">
+        <option value="carte">Carte</option>
+        <option value="paypal">PayPal</option>
+        <option value="bitcoin">Bitcoin</option>
+        <option value="portefeuille">Portefeuille</option>
+      </select>
+
+      @if (erreur()) {
+        <p class="champ-erreur">{{ erreur() }}</p>
+      }
+
+      <button class="acheter" (click)="acheter()">Valider l'achat</button>
+    </div>
+  }
+</section>

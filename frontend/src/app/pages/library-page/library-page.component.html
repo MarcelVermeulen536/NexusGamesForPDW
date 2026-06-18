@@ -1,0 +1,25 @@
+<section class="biblio">
+  <h1>Ma bibliothèque</h1>
+
+  @if (isLoading()) {
+    <p class="info">Chargement...</p>
+  } @else if (hasError()) {
+    <p class="erreur">Impossible de charger la bibliothèque.</p>
+  } @else {
+    <div class="grille">
+      @for (item of items(); track item.gameId) {
+        <article class="carte">
+          <h2>{{ item.titre }}</h2>
+          <p class="meta">{{ item.tempsJeuHeures }} h de jeu</p>
+          <!-- Barre de progression simple basée sur le pourcentage de complétion -->
+          <div class="barre">
+            <div class="remplissage" [style.width.%]="item.completionPourcentage"></div>
+          </div>
+          <p class="completion">{{ item.completionPourcentage }} % terminé</p>
+        </article>
+      } @empty {
+        <p class="info">Votre bibliothèque est vide. Achetez un jeu pour commencer !</p>
+      }
+    </div>
+  }
+</section>
