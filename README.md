@@ -12,15 +12,35 @@ Plateforme de vente de jeux vidéo (style Steam / GOG) développée avec **Angul
 
 ---
 
-## Prérequis
+## Prérequis — logiciels à installer (une seule fois)
 
-| Outil | Version utilisée | Remarque |
-|-------|------------------|----------|
-| .NET SDK | **10** (10.0.203) | https://dotnet.microsoft.com/download |
-| Node.js | **24.14.1** | https://nodejs.org |
-| npm | **11.11.0** | installé avec Node.js |
-| Angular CLI | **21.2.6** | `npm install -g @angular/cli` |
-| SGBD | **MySQL / MariaDB** (testé sur MariaDB 10.4.32 via XAMPP) | compatible MySQL |
+Sur une machine neuve, installez ces 3 logiciels **avant tout** (cliquez « Suivant » / « Next » jusqu'au bout pour chaque installation) :
+
+1. **.NET SDK 10** → https://dotnet.microsoft.com/download/dotnet/10.0
+   (téléchargez « SDK x64 » pour Windows, lancez l'installateur.)
+2. **Node.js 20 ou plus (version LTS)** → https://nodejs.org
+   (npm est inclus automatiquement avec Node.js — rien d'autre à installer.)
+3. **XAMPP** (fournit le serveur **MySQL** + l'outil graphique **phpMyAdmin**) → https://www.apachefriends.org
+
+> ⚠️ **Important** : après avoir installé .NET et Node.js, **fermez puis rouvrez** vos fenêtres de terminal (sinon les commandes ne seront pas reconnues).
+
+**Pour vérifier que tout est bien installé**, ouvrez un terminal (touche Windows → tapez `cmd` → Entrée) et tapez ces commandes ; chacune doit afficher un numéro de version :
+```bash
+dotnet --version
+node --version
+npm --version
+```
+
+Versions utilisées pour ce projet (à titre indicatif) :
+
+| Outil | Version |
+|-------|---------|
+| .NET SDK | 10 (10.0.203) |
+| Node.js / npm | 24.14.1 / 11.11.0 |
+| Angular | 21.2 (inclus dans le projet, **rien à installer en plus**) |
+| Base de données | MariaDB 10.4.32 via XAMPP (compatible MySQL) |
+
+> L'outil **Angular CLI** n'a **pas besoin** d'être installé globalement : il est déjà inclus dans le projet et utilisé automatiquement par la commande `npm start`.
 
 ---
 
@@ -41,50 +61,68 @@ Flux d'une donnée :
 
 ---
 
-## Installation
+## Lancement pas à pas (depuis zéro)
 
-### 1. Base de données
+> Astuce pour ouvrir un terminal dans un dossier : dans l'Explorateur Windows, ouvrez le dossier voulu, cliquez dans la **barre d'adresse**, tapez `cmd` et appuyez sur **Entrée**.
 
-Démarrer le serveur MySQL (par exemple via **XAMPP** → bouton *Start* sur MySQL, ou MySQL Server).
+### Étape 1 — Démarrer la base de données
 
-Puis exécuter le script de création de la base. Il crée la base `plateforme_jeux`, les tables, le trigger et les données d'exemple.
+Ouvrez le **XAMPP Control Panel** et cliquez sur **Start** en face de **MySQL** (la ligne devient verte). Laissez XAMPP ouvert.
 
-**Option A — en ligne de commande :**
-```bash
-mysql -u root -p --default-character-set=utf8mb4 < backend/Infrastructure/db.sql
-```
-(Avec XAMPP, le client se trouve dans `C:\xampp\mysql\bin\mysql.exe` et root n'a pas de mot de passe par défaut.)
+### Étape 2 — Créer la base de données (uniquement la 1ʳᵉ fois)
 
-**Option B — via MySQL Workbench :** ouvrir `backend/Infrastructure/db.sql` et l'exécuter.
+Cette étape crée la base `plateforme_jeux`, les tables, le déclencheur (trigger) et les données d'exemple. **La méthode la plus simple : phpMyAdmin.**
 
-### 2. Chaîne de connexion
+1. Dans XAMPP, cliquez sur **Admin** en face de MySQL (ou ouvrez votre navigateur sur **http://localhost/phpmyadmin**).
+2. En haut, cliquez sur l'onglet **Importer**.
+3. Cliquez sur **Choisir un fichier** et sélectionnez le fichier :
+   `backend/Infrastructure/db.sql` (dans le dossier du projet).
+4. Descendez en bas et cliquez sur **Importer** (ou **Exécuter**).
+5. À gauche, la base **`plateforme_jeux`** doit apparaître avec ses 10 tables. ✅
 
-Vérifier / adapter la chaîne de connexion dans `backend/Api/appsettings.json` selon votre configuration MySQL :
+> *Alternative en ligne de commande (si vous préférez)* : ouvrez un terminal dans le dossier `backend/Infrastructure` et lancez
+> `"C:\xampp\mysql\bin\mysql.exe" -u root --default-character-set=utf8mb4 < db.sql`
+
+### Étape 3 — Vérifier le mot de passe de la base (souvent rien à faire)
+
+Le projet est configuré pour MySQL de XAMPP : utilisateur **`root`** **sans mot de passe**, ce qui est le réglage par défaut de XAMPP. **Si c'est votre cas, ne touchez à rien.**
+
+Seulement si votre utilisateur MySQL a un mot de passe différent, ouvrez le fichier `backend/Api/appsettings.json` et adaptez cette ligne (mettez le mot de passe après `Pwd=`) :
 ```json
 "ConnectionStrings": {
   "Default": "Server=localhost;Port=3306;Database=plateforme_jeux;Uid=root;Pwd=;CharSet=utf8mb4;"
 }
 ```
-Modifier `Uid` et `Pwd` si votre utilisateur MySQL diffère (par défaut XAMPP : `Uid=root` et mot de passe vide).
 
-### 3. Lancement du Backend
+### Étape 4 — Démarrer le Backend (l'API)
 
+Ouvrez un terminal dans le dossier `backend/Api` et tapez :
 ```bash
-cd backend/Api
-dotnet restore
 dotnet run --launch-profile http
 ```
-L'API démarre sur **http://localhost:5252**.
+La 1ʳᵉ fois, .NET télécharge les dépendances (patientez). C'est prêt quand vous voyez **`Now listening on: http://localhost:5252`**.
+👉 **Laissez ce terminal ouvert** (ne le fermez pas tant que vous utilisez l'application).
 
-### 4. Lancement du Frontend
+### Étape 5 — Démarrer le Frontend (l'application Angular)
 
-Dans un autre terminal :
+Ouvrez un **deuxième** terminal (le premier doit rester ouvert) dans le dossier `frontend`.
+
+La toute première fois seulement, installez les dépendances (cela prend quelques minutes) :
 ```bash
-cd frontend
 npm install
+```
+Puis, à chaque lancement :
+```bash
 npm start
 ```
-L'application démarre sur **http://localhost:4200** (ouvrir cette adresse dans le navigateur).
+C'est prêt quand vous voyez **`Local: http://localhost:4200`**. 👉 Laissez aussi ce terminal ouvert.
+
+### Étape 6 — Ouvrir l'application
+
+Ouvrez votre navigateur sur **http://localhost:4200**.
+Connectez-vous avec un compte de test, par exemple **gamer1@email.com** / **Password123!** (voir la section ci-dessous).
+
+> Pour tout arrêter : fermez les deux terminaux, puis cliquez sur **Stop** (MySQL) dans XAMPP.
 
 ---
 
